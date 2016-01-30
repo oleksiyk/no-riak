@@ -6,6 +6,8 @@ var Promise = require('bluebird');
 var _ = require('lodash');
 var Client  = require('..');
 
+var bucket = 'no-riak-test-kv';
+
 describe('Server connections', function () {
     it('pool should split connections according to server weights', function () {
         var client = new Client({
@@ -86,6 +88,38 @@ describe('Server connections', function () {
         })
         .then(function () {
             client.pool.connections.free.length.should.be.eql(5);
+        });
+    });
+
+    it('Connection should be able to grow its buffer', function () {
+        var client = new Client({
+            pool: {
+                connectionBufSize: 10 // 10 bytes
+            }
+        });
+
+        var data = new Buffer(100000);
+
+        client.pool.connections.free[0].buffer.length.should.be.eql(10);
+
+        return client.put({
+            bucket: bucket,
+            content: {
+                value: data
+            }
+        })
+        .then(function (result) {
+            return client.get({
+                bucket: bucket,
+                key: result.key
+            });
+        })
+        .then(function (result) {
+            result.should.be.an('object');
+            result.should.have.property('content').that.is.an('array');
+            result.content.should.have.length(1);
+            result.content[0].should.have.property('value');
+            result.content[0].value.should.be.eql(data);
         });
     });
 });
