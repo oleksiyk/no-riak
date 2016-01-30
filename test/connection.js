@@ -2,7 +2,7 @@
 
 /* global describe, it, before, after, expect, uniqueKey  */
 
-// var Promise = require('bluebird');
+var Promise = require('bluebird');
 var _ = require('lodash');
 var Client  = require('..');
 
@@ -36,5 +36,25 @@ describe('Server connections', function () {
         });
 
         return client.init().should.be.rejectedWith('Connection timeout');
+    });
+
+    it('should create up to max connections and put new requests in waiting queue', function () {
+        var client = new Client({
+            pool: {
+                min: 5,
+                max: 20
+            }
+        });
+
+        // send 30 concurrent requests
+        return Promise.map(_.range(30), function () {
+            return client.getServerInfo();
+        })
+        .then(function (results) {
+            results.should.be.an('array').and.have.length(30);
+
+            // pool should have created 15 new connections, 20 in total
+            client.pool.connections.free.length.should.be.eql(20);
+        });
     });
 });
