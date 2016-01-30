@@ -16,3 +16,7 @@ global.chai.use(chaiAsPromised);
 // https://github.com/domenic/sinon-chai
 var sinonChai = require('sinon-chai');
 global.chai.use(sinonChai);
+
+global.uniqueKey = function (prefix) {
+    return (prefix || 'no-riak-test') + '-key-' + Math.floor(1000000 * Math.random());
+};
