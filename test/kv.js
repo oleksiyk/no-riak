@@ -130,6 +130,76 @@ describe('Key/Value operations', function () {
         });
     });
 
+    it('put with specified key twice - siblings', function () {
+        var key = uniqueKey();
+
+        return client.put({
+            bucket: bucket,
+            key: key,
+            content: {
+                value: 'hello1'
+            }
+        })
+        .then(function () {
+            return client.put({
+                bucket: bucket,
+                key: key,
+                content: {
+                    value: 'hello2'
+                }
+            });
+        })
+        .then(function () {
+            return client.get({
+                bucket: bucket,
+                key: key
+            });
+        })
+        .then(function (result) {
+            result.should.be.an('object');
+            result.should.have.property('content').that.is.an('array');
+            result.content.should.have.length(2);
+            result.content[0].should.have.property('value');
+            result.content[0].value.toString().should.be.eql('hello1');
+            result.content[1].should.have.property('value');
+            result.content[1].value.toString().should.be.eql('hello2');
+        });
+    });
+
+    it('fetchPut with specified key twice - no siblings', function () {
+        var key = uniqueKey();
+
+        return client.fetchPut({
+            bucket: bucket,
+            key: key,
+            content: {
+                value: 'hello1'
+            }
+        })
+        .then(function () {
+            return client.fetchPut({
+                bucket: bucket,
+                key: key,
+                content: {
+                    value: 'hello2'
+                }
+            });
+        })
+        .then(function () {
+            return client.get({
+                bucket: bucket,
+                key: key
+            });
+        })
+        .then(function (result) {
+            result.should.be.an('object');
+            result.should.have.property('content').that.is.an('array');
+            result.content.should.have.length(1);
+            result.content[0].should.have.property('value');
+            result.content[0].value.toString().should.be.eql('hello2');
+        });
+    });
+
     it('listBuckets', function () {
         this.timeout(5000);
         return client.listBuckets()
