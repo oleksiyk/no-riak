@@ -10,6 +10,15 @@ var bucket = 'no-riak-test-kv';
 var client = new Client();
 
 describe('Key/Value operations', function () {
+    before(function () {
+        return client.setBucket({
+            bucket: bucket,
+            props: {
+                allow_mult: true
+            }
+        });
+    });
+
     it('put/get UTF8 string', function () {
         var str = '人人生而自由，在尊嚴和權利上一律平等。';
         return client.put({
@@ -39,7 +48,7 @@ describe('Key/Value operations', function () {
         });
     });
 
-    it('put - number', function () {
+    it('put - number - rejected', function () {
         return client.put({
             bucket: bucket,
             content: {
@@ -364,6 +373,37 @@ describe('Key/Value operations', function () {
 
             results[2].should.be.an('array').and.have.length(1); // array of 3rd phase results
             results[2][0].should.be.eql(10 + 11 + 12);
+        });
+    });
+
+    it('set counter', function () {
+        var key = uniqueKey('counter');
+        return client.updateCounter({
+            bucket: bucket,
+            key: key,
+            amount: 5,
+            returnvalue: true
+        })
+        .then(function (value) {
+            value.toNumber().should.be.eql(5);
+        });
+    });
+
+    it('get counter', function () {
+        var key = uniqueKey('counter');
+        return client.updateCounter({
+            bucket: bucket,
+            key: key,
+            amount: 5
+        })
+        .then(function () {
+            return client.getCounter({
+                bucket: bucket,
+                key: key
+            });
+        })
+        .then(function (value) {
+            value.toNumber().should.be.eql(5);
         });
     });
 });
