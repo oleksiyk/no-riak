@@ -19,7 +19,7 @@ describe('Server connections', function () {
         client.pool.connections.free.length.should.be.eql(9);
 
         _.countBy(client.pool.connections.free, function (c) {
-            return c.host + ':' + c.port;
+            return c.options.host + ':' + c.options.port;
         }).should.be.eql({
             '10.0.1.1:8087': 4,
             '10.0.1.2:8087': 3,
@@ -35,7 +35,7 @@ describe('Server connections', function () {
             }
         });
 
-        return client.init().should.be.rejectedWith('Connection timeout');
+        return client.init().should.be.rejectedWith('Connection timeout to 127.1.2.3:8087');
     });
 
     it('should create up to max connections and put new requests in waiting queue', function () {
@@ -55,6 +55,37 @@ describe('Server connections', function () {
 
             // pool should have created 15 new connections, 20 in total
             client.pool.connections.free.length.should.be.eql(20);
+        });
+    });
+
+    it('should close excessive connections after the burst', function () {
+        var client = new Client({
+            pool: {
+                min: 5,
+                max: 20,
+                idleTimeout: 100
+            }
+        });
+
+        // send 30 concurrent requests
+        return Promise.map(_.range(30), function () {
+            return client.getServerInfo();
+        })
+        .then(function (results) {
+            results.should.be.an('array').and.have.length(30);
+            // pool should have created 15 new connections, 20 in total
+            client.pool.connections.free.length.should.be.eql(20);
+        })
+        .delay(200)
+        .then(function () {
+            // pool will close one connection at time after each request is finished
+            // send requests serially to avoid another burst
+            return Promise.each(_.range(30), function () {
+                return client.getServerInfo();
+            });
+        })
+        .then(function () {
+            client.pool.connections.free.length.should.be.eql(5);
         });
     });
 });
