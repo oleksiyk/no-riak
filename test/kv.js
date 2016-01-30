@@ -130,7 +130,7 @@ describe('Key/Value operations', function () {
         });
     });
 
-    it('put with specified key twice - siblings', function () {
+    it('put twice without vclock - siblings (allow_mult=true)', function () {
         var key = uniqueKey();
 
         return client.put({
@@ -166,10 +166,10 @@ describe('Key/Value operations', function () {
         });
     });
 
-    it('fetchPut with specified key twice - no siblings', function () {
+    it('update twice - no siblings (allow_mult=true)', function () {
         var key = uniqueKey();
 
-        return client.fetchPut({
+        return client.update({
             bucket: bucket,
             key: key,
             content: {
@@ -177,7 +177,7 @@ describe('Key/Value operations', function () {
             }
         })
         .then(function () {
-            return client.fetchPut({
+            return client.update({
                 bucket: bucket,
                 key: key,
                 content: {
