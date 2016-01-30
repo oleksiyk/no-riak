@@ -8,8 +8,9 @@ var Client  = require('..');
 
 var client = new Client();
 var bucket = 'no-riak-test-bucket';
+var bucketType = 'no-riak-test-bucket-type';
 
-describe('Other', function () {
+describe('Buckets API', function () {
     it('getBucket', function () {
         return client.getBucket({
             bucket: bucket
@@ -53,7 +54,7 @@ describe('Other', function () {
         });
     });
 
-    it('setBucket - string quorum values (r, pr, w..)', function () {
+    it('setBucket - string quorum values (r, pr, w, ..)', function () {
         return client.setBucket({
             bucket: bucket,
             props: {
@@ -77,7 +78,7 @@ describe('Other', function () {
         });
     });
 
-    it('setBucket - numeric quorum values (r, pr, w..)', function () {
+    it('setBucket - numeric quorum values (r, pr, w, ..)', function () {
         return client.setBucket({
             bucket: bucket,
             props: {
@@ -120,6 +121,36 @@ describe('Other', function () {
             result.props.should.have.property('allow_mult', false);
             result.props.should.have.property('basic_quorum', false);
             result.props.should.have.property('notfound_ok', true);
+        });
+    });
+
+    it('getBucketType - missing bucket type', function () {
+        return client.getBucketType({
+            type: uniqueKey('bucket-type')
+        }).should.be.rejectedWith('Invalid bucket type');
+    });
+
+    it('setBucketType - not active', function () {
+        return client.setBucketType({
+            type: uniqueKey('bucket-type'),
+            props: {
+                allow_mult: true
+            }
+        }).should.be.rejectedWith('Invalid bucket properties: not_active');
+    });
+
+    it.skip('setBucketType', function () {
+        return client.setBucketType({
+            type: bucketType,
+            props: {
+                allow_mult: true,
+                r: 1,
+                notfound_ok: false,
+                basic_quorum: true
+            }
+        })
+        .then(function (result) {
+            console.log(result);
         });
     });
 });
