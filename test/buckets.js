@@ -8,7 +8,7 @@ var Client  = require('..');
 
 var client = new Client();
 var bucket = 'no-riak-test-bucket';
-var bucketType = 'no-riak-test-bucket-type';
+var bucketType = 'no_riak_test_bucket_type';
 
 describe('Buckets API', function () {
     it('getBucket', function () {
@@ -130,6 +130,18 @@ describe('Buckets API', function () {
         }).should.be.rejectedWith('Invalid bucket type');
     });
 
+    it('getBucketType', function () {
+        return client.getBucketType({
+            type: bucketType
+        })
+        .then(function (result) {
+            result.should.be.an('object').and.have.property('props');
+            result.props.should.be.an('object');
+            result.props.should.have.property('r', 1);
+            result.props.should.have.property('allow_mult', true);
+        });
+    });
+
     it('setBucketType - not active', function () {
         return client.setBucketType({
             type: uniqueKey('bucket-type'),
@@ -139,15 +151,26 @@ describe('Buckets API', function () {
         }).should.be.rejectedWith('Invalid bucket properties: not_active');
     });
 
-    it.skip('setBucketType', function () {
+    it('setBucketType', function () {
         return client.setBucketType({
             type: bucketType,
             props: {
-                allow_mult: true,
-                r: 1,
                 notfound_ok: false,
                 basic_quorum: true
             }
+        })
+        .then(function () {
+            return client.getBucketType({
+                type: bucketType
+            });
+        })
+        .then(function (result) {
+            result.should.be.an('object').and.have.property('props');
+            result.props.should.be.an('object');
+            result.props.should.have.property('r', 1);
+            result.props.should.have.property('allow_mult', true);
+            result.props.should.have.property('notfound_ok', false);
+            result.props.should.have.property('basic_quorum', true);
         });
     });
 });

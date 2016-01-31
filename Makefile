@@ -15,7 +15,7 @@ endif
 all: lint test coverage
 
 # Tests
-test:
+test: dt-setup
 	@$(ISTANBUL) cover --report text --report html _mocha
 
 # Check code style
@@ -36,9 +36,11 @@ proto:
 	@for file in $(RIAK_PROTO_FILES); do echo "$$file" && curl -# -o "src/$$file" "$(RIAK_PROTO_BASEURL)$$file"; done
 
 dt-setup:
+	@$(RIAK_ADMIN) bucket-type create no_riak_test_bucket_type '{"props":{"r":1,"allow_mult":true}}' > /dev/null || true
 	@$(RIAK_ADMIN) bucket-type create no_riak_test_crdt_counter '{"props":{"datatype":"counter","allow_mult":true}}' > /dev/null || true
 	@$(RIAK_ADMIN) bucket-type create no_riak_test_crdt_map '{"props":{"datatype":"map","allow_mult":true}}' > /dev/null || true
 	@$(RIAK_ADMIN) bucket-type create no_riak_test_crdt_set '{"props":{"datatype":"set","allow_mult":true}}' > /dev/null || true
+	@$(RIAK_ADMIN) bucket-type activate no_riak_test_bucket_type > /dev/null || true
 	@$(RIAK_ADMIN) bucket-type activate no_riak_test_crdt_counter > /dev/null || true
 	@$(RIAK_ADMIN) bucket-type activate no_riak_test_crdt_map > /dev/null || true
 	@$(RIAK_ADMIN) bucket-type activate no_riak_test_crdt_set > /dev/null || true
