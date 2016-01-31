@@ -6,6 +6,12 @@ RIAK_PROTO_REV = 2.1.2.0
 RIAK_PROTO_BASEURL = https://raw.githubusercontent.com/basho/riak_pb/$(RIAK_PROTO_REV)/src/
 RIAK_PROTO_FILES = riak.proto riak_dt.proto riak_kv.proto riak_pb_messages.csv riak_search.proto riak_ts.proto riak_yokozuna.proto
 
+ifeq ($(RIAK_ADMIN_USE_SUDO),true)
+	RIAK_ADMIN = sudo riak-admin
+else
+	RIAK_ADMIN := riak-admin
+endif
+
 all: lint test coverage
 
 # Tests
@@ -29,5 +35,22 @@ clean-cov:
 proto:
 	@for file in $(RIAK_PROTO_FILES); do echo "$$file" && curl -# -o "src/$$file" "$(RIAK_PROTO_BASEURL)$$file"; done
 
-.PHONY: all test lint coverage clean clean-cov
+dt-setup:
+	@$(RIAK_ADMIN) bucket-type create no_riak_test_crdt_counter '{"props":{"datatype":"counter","allow_mult":true}}' > /dev/null || true
+	@$(RIAK_ADMIN) bucket-type create no_riak_test_crdt_map '{"props":{"datatype":"map","allow_mult":true}}' > /dev/null || true
+	@$(RIAK_ADMIN) bucket-type create no_riak_test_crdt_set '{"props":{"datatype":"set","allow_mult":true}}' > /dev/null || true
+	@$(RIAK_ADMIN) bucket-type activate no_riak_test_crdt_counter > /dev/null || true
+	@$(RIAK_ADMIN) bucket-type activate no_riak_test_crdt_map > /dev/null || true
+	@$(RIAK_ADMIN) bucket-type activate no_riak_test_crdt_set > /dev/null || true
+
+enable-security:
+	@$(RIAK_ADMIN) security enable > /dev/null || true
+	@$(RIAK_ADMIN) security add-user riak password=testing > /dev/null || true
+	@$(RIAK_ADMIN) security add-grant riak_kv.put,riak_kv.get,riak_kv.del on any to riak > /dev/null || true
+	@$(RIAK_ADMIN) security add-source riak 127.0.0.1/32 password > /dev/null || true
+
+disable-security:
+	@$(RIAK_ADMIN) security disable > /dev/null || true
+
+.PHONY: all test lint coverage clean clean-cov proto dt-setup enable-security disable-security
 

@@ -148,9 +148,6 @@ describe('Buckets API', function () {
                 notfound_ok: false,
                 basic_quorum: true
             }
-        })
-        .then(function (result) {
-            console.log(result);
         });
     });
 });
