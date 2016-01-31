@@ -17,4 +17,21 @@ describe('Other', function () {
             result.should.have.property('server_version').that.is.a('string');
         });
     });
+
+    it('RiakError', function () {
+        var client = new Client();
+
+        return client.index({
+            bucket: uniqueKey(),
+            index: uniqueKey(),
+            qtype: 0
+        })
+        .catch(function (err) {
+            err.toString().should.include('RiakError');
+            err.toJSON().should.be.an('object');
+            err.toJSON().should.have.property('name', 'RiakError');
+            err.toJSON().should.have.property('code').that.is.a('number');
+            err.toJSON().should.have.property('message').that.is.a('string');
+        });
+    });
 });

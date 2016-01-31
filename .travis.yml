@@ -16,8 +16,6 @@ before_script:
   - "popd"
   - "sudo service riak start"
   - 'until sudo riak-admin test > /dev/null 2>&1; do sleep 2; done'
-  # - "sudo -H -u riak -i riak-admin bucket-type create dt-test-set '{\"props\":{\"datatype\":\"set\",\"allow_mult\":\"true\"}}'"
-  # - "sudo -H -u riak -i riak-admin bucket-type activate dt-test-set"
 
 env:
   - RIAK_ADMIN_USE_SUDO=true
