@@ -446,6 +446,55 @@ describe('Key/Value operations', function () {
         });
     });
 
+    it('map/reduce - keep=false', function () {
+        var keys = [];
+        return Promise.all(_.range(3).map(function (i) {
+            keys[i] = uniqueKey();
+            return client.put({
+                bucket: bucket,
+                key: keys[i],
+                content: {
+                    value: {
+                        num: i + 10
+                    }
+                }
+            });
+        }))
+        .then(function () {
+            return client.mapReduce({
+                request: {
+                    inputs: _.map(keys, function (k) { return [bucket, k]; }),
+                    query: [{
+                        map: {
+                            source: 'function(v) { var d = Riak.mapValuesJson(v)[0]; return [d]; }',
+                            language: 'javascript'
+                        }
+                    }, {
+                        reduce: {
+                            source: 'function(values) { return values.map(function(v){ return v.num; }); }',
+                            language: 'javascript'
+                        }
+                    }, {
+                        reduce: {
+                            module: 'riak_kv_mapreduce',
+                            function: 'reduce_sum',
+                            language: 'erlang'
+                        }
+                    }]
+                }
+            });
+        })
+        .then(function (results) {
+            results.should.be.an('array').and.have.length(3); // each index in array is (phase number - 1), even if phase.keep was false
+
+            expect(results[0]).to.eql(undefined);
+            expect(results[1]).to.eql(undefined);
+
+            results[2].should.be.an('array').and.have.length(1); // array of 3rd phase results
+            results[2][0].should.be.eql(10 + 11 + 12);
+        });
+    });
+
     it('set counter', function () {
         var key = uniqueKey('counter');
         return client.updateCounter({
