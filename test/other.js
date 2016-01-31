@@ -30,6 +30,7 @@ describe('Other', function () {
             err.toString().should.include('RiakError');
             err.toJSON().should.be.an('object');
             err.toJSON().should.have.property('name', 'RiakError');
+            // errcode is always 0, see https://github.com/basho/riak_kv/issues/336
             err.toJSON().should.have.property('code').that.is.a('number');
             err.toJSON().should.have.property('message').that.is.a('string');
         });
