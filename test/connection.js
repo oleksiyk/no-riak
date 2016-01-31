@@ -37,7 +37,17 @@ describe('Server connections', function () {
             }
         });
 
-        return client.init().should.be.rejectedWith('Connection timeout to 127.1.2.3:8087');
+        return client.init().catch(function (err) {
+            err.toString.should.include('127.1.2.3');
+            err.toString.should.include('8087');
+
+            err.toJSON().should.be.an('object');
+            err.toJSON().should.have.property('name', 'ConnectionError');
+            err.toJSON().should.have.property('host', '127.1.2.3');
+            err.toJSON().should.have.property('port', 8087);
+
+            throw err;
+        }).should.be.rejected;
     });
 
     it('should create up to max connections and put new requests in waiting queue', function () {
