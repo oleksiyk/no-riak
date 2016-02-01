@@ -19,6 +19,62 @@ describe('Key/Value operations', function () {
         });
     });
 
+    it('put', function () {
+        return client.put({
+            bucket: bucket,
+            content: {
+                value: '123'
+            }
+        })
+        .then(function (result) {
+            result.should.be.an('object').and.have.property('key').that.is.a('string');
+            result.should.not.have.property('content');
+            result.should.not.have.property('vclock');
+        });
+    });
+
+    it('put - return_head: true', function () {
+        return client.put({
+            bucket: bucket,
+            content: {
+                value: '123'
+            },
+            return_head: true
+        })
+        .then(function (result) {
+            result.should.be.an('object');
+            result.should.have.property('content').that.is.an('array');
+            result.should.have.property('vclock').that.is.a('string');
+            result.content.should.have.length(1);
+            result.content[0].should.have.property('value');
+            expect(result.content[0].value).to.eql(null);
+            result.content[0].should.have.property('vtag').that.is.a('string');
+            result.content[0].should.have.property('last_mod').that.is.a('number');
+            result.content[0].should.have.property('last_mod_usecs').that.is.a('number');
+        });
+    });
+
+    it('put - return_body: true', function () {
+        return client.put({
+            bucket: bucket,
+            content: {
+                value: '123'
+            },
+            return_body: true
+        })
+        .then(function (result) {
+            result.should.be.an('object');
+            result.should.have.property('content').that.is.an('array');
+            result.should.have.property('vclock').that.is.a('string');
+            result.content.should.have.length(1);
+            result.content[0].should.have.property('value');
+            result.content[0].value.toString('utf8').should.be.eql('123');
+            result.content[0].should.have.property('vtag').that.is.a('string');
+            result.content[0].should.have.property('last_mod').that.is.a('number');
+            result.content[0].should.have.property('last_mod_usecs').that.is.a('number');
+        });
+    });
+
     it('put/get UTF8 string', function () {
         var str = '人人生而自由，在尊嚴和權利上一律平等。';
         return client.put({
@@ -45,6 +101,27 @@ describe('Key/Value operations', function () {
             result.content[0].should.have.property('vtag').that.is.a('string');
             result.content[0].should.have.property('last_mod').that.is.a('number');
             result.content[0].should.have.property('last_mod_usecs').that.is.a('number');
+        });
+    });
+
+    it('get/put with vclock', function () {
+        return client.put({
+            bucket: bucket,
+            content: {
+                value: '123'
+            },
+            return_head: true
+        })
+        .then(function (result) {
+            result.should.have.property('vclock').that.is.a('string');
+            return client.put({
+                bucket: bucket,
+                key: result.key,
+                vclock: result.vclock,
+                content: {
+                    value: '456'
+                }
+            });
         });
     });
 
@@ -277,6 +354,34 @@ describe('Key/Value operations', function () {
             });
         })
         .delay(20) // easy way to avoid tobstones in a test (without using vclock)
+        .then(function () {
+            return client.get({
+                bucket: bucket,
+                key: key
+            });
+        }).should.eventually.be.eql(null);
+    });
+
+    it('del with vclock', function () {
+        var key = uniqueKey('key');
+
+        return client.put({
+            bucket: bucket,
+            key: key,
+            content: {
+                value: 'hello'
+            },
+            return_head: true
+        })
+        .then(function (result) {
+            result.should.have.property('vclock').that.is.a('string');
+
+            return client.del({
+                bucket: bucket,
+                key: key,
+                vclock: result.vclock
+            });
+        })
         .then(function () {
             return client.get({
                 bucket: bucket,
