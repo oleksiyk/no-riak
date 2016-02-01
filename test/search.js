@@ -145,6 +145,9 @@ describe('Yokozuna search API', function () {
             .then(function (result) {
                 result.should.be.an('object');
                 result.should.have.property('num_found', 0);
+                result.should.have.property('max_score');
+                result.should.have.property('docs').that.is.an('array');
+                result.docs.should.have.length(0);
             });
         });
     });

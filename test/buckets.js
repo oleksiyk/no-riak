@@ -11,6 +11,25 @@ var bucket = 'no-riak-test-bucket';
 var bucketType = 'no_riak_test_bucket_type';
 
 describe('Buckets API', function () {
+    it('listBuckets', function () {
+        this.timeout(5000);
+        return client.put({
+            bucket: bucket,
+            content: {
+                value: 'hello'
+            }
+        })
+        .then(function () {
+            return client.listBuckets();
+        })
+        .then(function (result) {
+            result.should.be.an('array');
+            result.should.have.length.gt(0);
+            result[0].should.be.a('string');
+            result.should.include(bucket);
+        });
+    });
+
     it('getBucket', function () {
         return client.getBucket({
             bucket: bucket
