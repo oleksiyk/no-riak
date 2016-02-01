@@ -353,6 +353,15 @@ describe('Key/Value operations', function () {
         });
     });
 
+    it('listKeys - empty bucket', function () {
+        return client.listKeys({
+            bucket: uniqueKey('nucket')
+        })
+        .then(function (result) {
+            result.should.be.an('array').and.have.length(0);
+        });
+    });
+
     it('del - wrong key', function () {
         return client.del({
             bucket: bucket,
