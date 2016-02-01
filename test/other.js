@@ -22,8 +22,8 @@ describe('Other', function () {
         var client = new Client();
 
         return client.index({
-            bucket: uniqueKey(),
-            index: uniqueKey(),
+            bucket: uniqueKey('bucket'),
+            index: uniqueKey('index'),
             qtype: 0
         })
         .catch(function (err) {

@@ -137,7 +137,6 @@ describe('Buckets API', function () {
         .then(function (result) {
             result.should.be.an('object').and.have.property('props');
             result.props.should.be.an('object');
-            result.props.should.have.property('r', 1);
             result.props.should.have.property('allow_mult', true);
         });
     });
@@ -167,10 +166,33 @@ describe('Buckets API', function () {
         .then(function (result) {
             result.should.be.an('object').and.have.property('props');
             result.props.should.be.an('object');
-            result.props.should.have.property('r', 1);
             result.props.should.have.property('allow_mult', true);
             result.props.should.have.property('notfound_ok', false);
             result.props.should.have.property('basic_quorum', true);
+        });
+    });
+
+    it('setBucketType - string quorum values (r, pr, w, ..)', function () {
+        return client.setBucketType({
+            type: bucketType,
+            props: {
+                r: 'all',
+                w: 'one'
+            }
+        })
+        .then(function (result) {
+            expect(result).to.eql(null);
+        })
+        .then(function () {
+            return client.getBucketType({
+                type: bucketType
+            });
+        })
+        .then(function (result) {
+            result.should.be.an('object').and.have.property('props');
+            result.props.should.be.an('object');
+            result.props.should.have.property('r', 'all');
+            result.props.should.have.property('w', 'one');
         });
     });
 });

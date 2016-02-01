@@ -104,7 +104,7 @@ describe('Key/Value operations', function () {
     });
 
     it('put/get with specified key', function () {
-        var key = uniqueKey();
+        var key = uniqueKey('key');
 
         return client.put({
             bucket: bucket,
@@ -131,7 +131,7 @@ describe('Key/Value operations', function () {
     });
 
     it('put twice without vclock - siblings (allow_mult=true)', function () {
-        var key = uniqueKey();
+        var key = uniqueKey('key');
 
         return client.put({
             bucket: bucket,
@@ -167,7 +167,7 @@ describe('Key/Value operations', function () {
     });
 
     it('update twice - no siblings (allow_mult=true)', function () {
-        var key = uniqueKey();
+        var key = uniqueKey('key');
 
         return client.update({
             bucket: bucket,
@@ -212,7 +212,7 @@ describe('Key/Value operations', function () {
     });
 
     it('listKeys', function () {
-        var key = uniqueKey();
+        var key = uniqueKey('key');
 
         return client.put({
             bucket: bucket,
@@ -249,7 +249,7 @@ describe('Key/Value operations', function () {
     });
 
     it('del', function () {
-        var key = uniqueKey();
+        var key = uniqueKey('key');
 
         return client.put({
             bucket: bucket,
@@ -274,10 +274,10 @@ describe('Key/Value operations', function () {
     });
 
     it('2i search, with max_results/continuation', function () {
-        var keys = [], indexValue = uniqueKey();
+        var keys = [], indexValue = uniqueKey('index');
 
         return Promise.all(_.range(3).map(function (i) {
-            keys[i] = uniqueKey();
+            keys[i] = uniqueKey('key');
             return client.put({
                 bucket: bucket,
                 key: keys[i],
@@ -319,9 +319,9 @@ describe('Key/Value operations', function () {
     });
 
     it('2i search all at once', function () {
-        var keys = [], indexValue = uniqueKey();
+        var keys = [], indexValue = uniqueKey('index');
         return Promise.all(_.range(3).map(function (i) {
-            keys[i] = uniqueKey();
+            keys[i] = uniqueKey('key');
             return client.put({
                 bucket: bucket,
                 key: keys[i],
@@ -349,9 +349,9 @@ describe('Key/Value operations', function () {
     });
 
     it('2i range query with return_terms=true', function () {
-        var keys = [], indexValue = uniqueKey();
+        var keys = [], indexValue = uniqueKey('index');
         return Promise.all(_.range(3).map(function (i) {
-            keys[i] = uniqueKey();
+            keys[i] = uniqueKey('key');
             return client.put({
                 bucket: bucket,
                 key: keys[i],
@@ -394,7 +394,7 @@ describe('Key/Value operations', function () {
     it('map/reduce', function () {
         var keys = [];
         return Promise.all(_.range(3).map(function (i) {
-            keys[i] = uniqueKey();
+            keys[i] = uniqueKey('key');
             return client.put({
                 bucket: bucket,
                 key: keys[i],
@@ -449,7 +449,7 @@ describe('Key/Value operations', function () {
     it('map/reduce - keep=false', function () {
         var keys = [];
         return Promise.all(_.range(3).map(function (i) {
-            keys[i] = uniqueKey();
+            keys[i] = uniqueKey('key');
             return client.put({
                 bucket: bucket,
                 key: keys[i],
