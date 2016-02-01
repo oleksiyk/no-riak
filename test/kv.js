@@ -201,9 +201,39 @@ describe('Key/Value operations', function () {
         .then(function (result) {
             result.should.be.an('object');
             result.should.have.property('content').that.is.an('array');
+            result.should.have.property('vclock').that.is.an('string');
             result.content.should.have.length(1);
             result.content[0].should.have.property('value');
             result.content[0].value.toString().should.be.eql('hello');
+        });
+    });
+
+    it('get with head=true', function () {
+        var key = uniqueKey('key');
+
+        return client.put({
+            bucket: bucket,
+            key: key,
+            content: {
+                value: 'hello'
+            }
+        })
+        .then(function (result) {
+            expect(result).to.eql(null);
+
+            return client.get({
+                bucket: bucket,
+                key: key,
+                head: true
+            });
+        })
+        .then(function (result) {
+            result.should.be.an('object');
+            result.should.have.property('content').that.is.an('array');
+            result.should.have.property('vclock').that.is.an('string');
+            result.content.should.have.length(1);
+            result.content[0].should.have.property('value');
+            expect(result.content[0].value).to.eql(null);
         });
     });
 
