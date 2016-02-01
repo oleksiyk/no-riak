@@ -130,6 +130,18 @@ describe('Key/Value operations', function () {
         });
     });
 
+    it('get wrong key', function () {
+        var key = uniqueKey('key');
+
+        return client.get({
+            bucket: bucket,
+            key: key
+        })
+        .then(function (result) {
+            expect(result).to.eql(null);
+        });
+    });
+
     it('put twice without vclock - siblings (allow_mult=true)', function () {
         var key = uniqueKey('key');
 
