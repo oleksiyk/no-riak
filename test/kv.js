@@ -446,22 +446,25 @@ describe('Key/Value operations', function () {
                 key: indexValue
             });
         })
-        .spread(function (_keys, continuation) {
-            _keys.should.be.an('array').and.have.length(2);
-            continuation.should.be.a('string');
+        .then(function (result) {
+            result.should.be.an('object').and.have.property('results');
+            result.results.should.be.an('array').and.have.length(2);
+            result.should.have.property('continuation');
+            result.continuation.should.be.a('string');
 
             return client.index({
                 bucket: bucket,
                 index: 'no-riak-test_bin',
                 qtype: 0,
                 max_results: 2,
-                continuation: continuation,
+                continuation: result.continuation,
                 key: indexValue
             });
         })
-        .spread(function (_keys, continuation) {
-            _keys.should.be.an('array').and.have.length(1);
-            expect(continuation).to.eql(null);
+        .then(function (result) {
+            result.should.be.an('object').and.have.property('results');
+            result.results.should.be.an('array').and.have.length(1);
+            expect(result.continuation).to.eql(undefined);
         });
     });
 
@@ -489,9 +492,10 @@ describe('Key/Value operations', function () {
                 key: indexValue
             });
         })
-        .spread(function (_keys, continuation) {
-            _keys.should.be.an('array').and.have.length(3);
-            expect(continuation).to.eql(null);
+        .then(function (result) {
+            result.should.be.an('object').and.have.property('results');
+            result.results.should.be.an('array').and.have.length(3);
+            expect(result.continuation).to.eql(undefined);
         });
     });
 
@@ -521,12 +525,13 @@ describe('Key/Value operations', function () {
                 range_max: indexValue
             });
         })
-        .spread(function (results, continuation) {
-            results.should.be.an('array').and.have.length(3);
-            results[0].should.be.an('object');
-            results[0].should.have.property('key');
-            results[0].should.have.property('value');
-            expect(continuation).to.eql(null);
+        .then(function (result) {
+            result.should.be.an('object').and.have.property('results');
+            result.results.should.be.an('array').and.have.length(3);
+            expect(result.continuation).to.eql(undefined);
+            result.results[0].should.be.an('object');
+            result.results[0].should.have.property('key');
+            result.results[0].should.have.property('value');
         });
     });
 
