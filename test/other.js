@@ -30,9 +30,7 @@ describe('Other', function () {
     it('ping - unreachable host', function () {
         var client = new Client({
             connectionString: '127.1.2.3:8087',
-            pool: {
-                connectionTimeout: 200
-            }
+            connectionTimeout: 200
         });
 
         return client.ping().should.be.rejectedWith(Client.ConnectionError);

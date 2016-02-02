@@ -32,9 +32,7 @@ describe('Server connections', function () {
     it('failed connection should be rejected with ConnectionError', function () {
         var client = new Client({
             connectionString: '127.1.2.3:8087',
-            pool: {
-                connectionTimeout: 100
-            }
+            connectionTimeout: 100
         });
 
         return client.init().catch(function (err) {
@@ -101,9 +99,7 @@ describe('Server connections', function () {
 
     it('Connection should be able to grow its buffer', function () {
         var client = new Client({
-            pool: {
-                connectionBufSize: 10 // 10 bytes
-            }
+            connectionBufSize: 10 // 10 bytes
         });
 
         var data = new Buffer(100000);
