@@ -47,9 +47,9 @@ dt-setup:
 
 enable-security:
 	@$(RIAK_ADMIN) security enable > /dev/null || true
-	@$(RIAK_ADMIN) security add-user riak password=testing > /dev/null || true
-	@$(RIAK_ADMIN) security add-grant riak_kv.put,riak_kv.get,riak_kv.del on any to riak > /dev/null || true
-	@$(RIAK_ADMIN) security add-source riak 127.0.0.1/32 password > /dev/null || true
+	@$(RIAK_ADMIN) security add-user no-riak password=secret > /dev/null || true
+	@$(RIAK_ADMIN) security add-grant riak_kv.put,riak_kv.get,riak_kv.del on any to no-riak > /dev/null || true
+	@$(RIAK_ADMIN) security add-source no-riak 127.0.0.1/32 password > /dev/null || true
 
 disable-security:
 	@$(RIAK_ADMIN) security disable > /dev/null || true
