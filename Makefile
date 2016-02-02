@@ -20,7 +20,7 @@ test: dt-setup
 
 # Check code style
 lint:
-	@$(ESLINT) lib/**/*.js test/**/*.js
+	@$(ESLINT) 'lib/**/*.js' 'test/**/*.js'
 
 # Check coverage levels
 coverage:
