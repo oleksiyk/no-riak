@@ -7,9 +7,6 @@
 var exec   = require('child_process').exec;
 var Client = require('..');
 
-// these are the only ciphers enabled in riak:
-var ciphers = 'DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:AES128-SHA256:AES128-SHA:AES256-SHA256:AES256-SHA:RC4-SHA';
-
 describe('Authentication and TLS', function () {
     after(function (done) {
         exec('make disable-security', { env: process.env }, done);
@@ -38,10 +35,6 @@ describe('Authentication and TLS', function () {
                 auth: {
                     user: 'no-riak',
                     password: 'secret'
-                },
-                tls: {
-                    // secureProtocol: 'SSLv23_method',
-                    ciphers: ciphers
                 }
             });
 
@@ -53,9 +46,6 @@ describe('Authentication and TLS', function () {
                 auth: {
                     user: 'no-riak-wrong',
                     password: 'secret-wrong'
-                },
-                tls: {
-                    ciphers: ciphers
                 }
             });
 
@@ -65,11 +55,7 @@ describe('Authentication and TLS', function () {
         });
 
         it('should not allow missing credentials', function () {
-            var client = new Client({
-                tls: {
-                    ciphers: ciphers
-                }
-            });
+            var client = new Client();
 
             this.timeout(10000);
 
