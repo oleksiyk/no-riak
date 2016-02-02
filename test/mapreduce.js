@@ -113,4 +113,18 @@ describe('Map/Reduce', function () {
             results[2][0].should.be.eql(10 + 11 + 12);
         });
     });
+
+    it('map/reduce - invalid inputs', function () {
+        return client.mapReduce({
+            request: {
+                inputs: [1, 2, 3],
+                query: [{
+                    map: {
+                        source: 'function(v) { var d = Riak.mapValuesJson(v)[0]; return [d]; }',
+                        language: 'javascript'
+                    }
+                }]
+            }
+        }).should.be.rejected.and.eventually.have.property('name', 'RiakError');
+    });
 });
