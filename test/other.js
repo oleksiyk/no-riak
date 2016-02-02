@@ -18,6 +18,26 @@ describe('Other', function () {
         });
     });
 
+    it('ping', function () {
+        var client = new Client();
+
+        return client.ping()
+        .then(function (result) {
+            expect(result).to.eql(null);
+        });
+    });
+
+    it('ping - unreachable host', function () {
+        var client = new Client({
+            connectionString: '127.1.2.3:8087',
+            pool: {
+                connectionTimeout: 200
+            }
+        });
+
+        return client.ping().should.be.rejectedWith(Client.ConnectionError);
+    });
+
     it('RiakError', function () {
         var client = new Client();
 
@@ -27,6 +47,7 @@ describe('Other', function () {
             qtype: 0
         })
         .catch(function (err) {
+            err.should.be.instanceOf(Client.RiakError);
             err.toString().should.include('RiakError');
             err.toJSON().should.be.an('object');
             err.toJSON().should.have.property('name', 'RiakError');

@@ -125,6 +125,6 @@ describe('Map/Reduce', function () {
                     }
                 }]
             }
-        }).should.be.rejected.and.eventually.have.property('name', 'RiakError');
+        }).should.be.rejectedWith(Client.RiakError);
     });
 });
