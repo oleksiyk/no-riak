@@ -46,13 +46,15 @@ dt-setup:
 	@$(RIAK_ADMIN) bucket-type activate no_riak_test_crdt_set > /dev/null || true
 
 enable-security:
-	@$(RIAK_ADMIN) security enable > /dev/null || true
-	@$(RIAK_ADMIN) security add-user no-riak password=secret > /dev/null || true
-	@$(RIAK_ADMIN) security add-grant riak_kv.put,riak_kv.get,riak_kv.del on any to no-riak > /dev/null || true
-	@$(RIAK_ADMIN) security add-source no-riak 127.0.0.1/32 password > /dev/null || true
+	@$(RIAK_ADMIN) security enable > /dev/null
+	@$(RIAK_ADMIN) security add-user no-riak password=secret > /dev/null
+	@$(RIAK_ADMIN) security grant riak_kv.put,riak_kv.get on any to no-riak > /dev/null
+	@$(RIAK_ADMIN) security add-source no-riak 127.0.0.1/32 password > /dev/null
 
 disable-security:
-	@$(RIAK_ADMIN) security disable > /dev/null || true
+	@$(RIAK_ADMIN) security del-user no-riak > /dev/null
+	@$(RIAK_ADMIN) security del-source no-riak 127.0.0.1/32 > /dev/null
+	@$(RIAK_ADMIN) security disable > /dev/null
 
 .PHONY: all test lint coverage clean clean-cov proto dt-setup enable-security disable-security
 

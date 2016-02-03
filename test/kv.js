@@ -5,7 +5,6 @@
 // var Promise = require('bluebird');
 var Client  = require('..');
 // var _       = require('lodash');
-
 var bucket = 'no-riak-test-kv';
 var client = new Client();
 
