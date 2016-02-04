@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/oleksiyk/no-riak.png)](https://travis-ci.org/oleksiyk/no-riak)
+[![Build Status](https://travis-ci.org/oleksiyk/no-riak.svg)](https://travis-ci.org/oleksiyk/no-riak)
+[![Dependencies](https://david-dm.org/oleksiyk/no-riak.svg)](https://david-dm.org/oleksiyk/no-riak)
 
 # no-riak
 
