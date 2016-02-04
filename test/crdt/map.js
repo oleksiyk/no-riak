@@ -174,14 +174,14 @@ describe('CRDT Map', function () {
 
         var v;
 
-        var counter = map
+        var set = map
             .update('key1', new Riak.CRDT.Counter().increment(-5))
             .update('key2', new Riak.CRDT.Set().add('a1', 'a2', 'a3'))
             .get('key2');
 
-        counter.should.be.an.instanceOf(Riak.CRDT.Set);
+        set.should.be.an.instanceOf(Riak.CRDT.Set);
 
-        counter.remove('a2');
+        set.remove('a2');
 
         v = map.value();
         v.should.be.an('object');
