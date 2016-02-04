@@ -2,8 +2,6 @@
 
 /* global describe, it, before, after, expect, uniqueKey  */
 
-// var Promise = require('bluebird');
-// var _ = require('lodash');
 var Riak  = require('..');
 
 var client = new Riak.Client();

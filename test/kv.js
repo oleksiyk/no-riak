@@ -2,9 +2,7 @@
 
 /* global describe, it, before, after, expect, uniqueKey  */
 
-// var Promise = require('bluebird');
 var Riak  = require('..');
-// var _       = require('lodash');
 var bucket = 'no-riak-test-kv';
 var client = new Riak.Client();
 

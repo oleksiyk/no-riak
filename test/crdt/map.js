@@ -2,8 +2,6 @@
 
 /* global describe, it, before, after, expect, uniqueKey  */
 
-// var Promise = require('bluebird');
-// var _ = require('lodash');
 var Riak  = require('../..');
 var client = new Riak.Client();
 
@@ -383,6 +381,36 @@ describe('CRDT Map', function () {
             v.should.be.an('object');
             v.should.have.property('key1');
             Buffer.isBuffer(v.key1).should.be.eql(true);
+        });
+    });
+
+    it('map flag', function () {
+        var map = new Riak.CRDT.Map(client, {
+            bucket: bucket,
+            type: bucketType
+        });
+
+        return map
+        .update('key1', new Riak.CRDT.Map.Flag().enable())
+        .save()
+        .call('value')
+        .then(function (v) {
+            var flag;
+            v.should.be.an('object');
+            v.should.have.property('key1');
+            v.key1.should.be.eql(true);
+
+            flag = map.get('key1');
+            flag.should.be.an.instanceOf(Riak.CRDT.Map.Flag);
+
+            flag.disable();
+
+            return map.save().call('value');
+        })
+        .then(function (v) {
+            v.should.be.an('object');
+            v.should.have.property('key1');
+            v.key1.should.be.eql(false);
         });
     });
 });
