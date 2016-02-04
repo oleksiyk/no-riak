@@ -4,11 +4,11 @@
 
 // var Promise = require('bluebird');
 // var _ = require('lodash');
-var Client  = require('..');
+var Riak  = require('..');
 
 describe('Other', function () {
     it('getServerInfo', function () {
-        var client = new Client();
+        var client = new Riak.Client();
 
         return client.getServerInfo()
         .then(function (result) {
@@ -19,7 +19,7 @@ describe('Other', function () {
     });
 
     it('ping', function () {
-        var client = new Client();
+        var client = new Riak.Client();
 
         return client.ping()
         .then(function (result) {
@@ -28,16 +28,16 @@ describe('Other', function () {
     });
 
     it('ping - unreachable host', function () {
-        var client = new Client({
+        var client = new Riak.Client({
             connectionString: '127.1.2.3:8087',
             connectionTimeout: 200
         });
 
-        return client.ping().should.be.rejectedWith(Client.ConnectionError);
+        return client.ping().should.be.rejectedWith(Riak.ConnectionError);
     });
 
     it('RiakError', function () {
-        var client = new Client();
+        var client = new Riak.Client();
 
         return client.index({
             bucket: uniqueKey('bucket'),
@@ -45,7 +45,7 @@ describe('Other', function () {
             qtype: 0
         })
         .catch(function (err) {
-            err.should.be.instanceOf(Client.RiakError);
+            err.should.be.instanceOf(Riak.RiakError);
             err.toString().should.include('RiakError');
             err.toJSON().should.be.an('object');
             err.toJSON().should.have.property('name', 'RiakError');

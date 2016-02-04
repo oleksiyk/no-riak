@@ -4,9 +4,9 @@
 
 // var Promise = require('bluebird');
 // var _ = require('lodash');
-var Client  = require('..');
+var Riak  = require('..');
 
-var client = new Client();
+var client = new Riak.Client();
 var bucket = 'no-riak-test-bucket';
 var bucketType = 'no_riak_test_bucket_type';
 

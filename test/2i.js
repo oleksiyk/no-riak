@@ -3,11 +3,11 @@
 /* global describe, it, before, after, expect, uniqueKey  */
 
 var Promise = require('bluebird');
-var Client  = require('..');
+var Riak  = require('..');
 var _       = require('lodash');
 
 var bucket = 'no-riak-test-kv';
-var client = new Client();
+var client = new Riak.Client();
 
 describe('Secondary indexes', function () {
     it('2i search, with max_results/continuation', function () {

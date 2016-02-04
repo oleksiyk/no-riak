@@ -4,15 +4,15 @@
 
 // var Promise = require('bluebird');
 // var _ = require('lodash');
-var Client  = require('../..');
-var client = new Client();
+var Riak  = require('../..');
+var client = new Riak.Client();
 
 var bucket = 'no_riak_test_crdt_set_bucket';
 var bucketType = 'no_riak_test_crdt_set';
 
 describe('CRDT Set', function () {
     it('should create new Set', function () {
-        var set = new Client.CRDT.Set(client, {
+        var set = new Riak.CRDT.Set(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -25,7 +25,7 @@ describe('CRDT Set', function () {
     });
 
     it('add single value to set', function () {
-        var set = new Client.CRDT.Set(client, {
+        var set = new Riak.CRDT.Set(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -37,7 +37,7 @@ describe('CRDT Set', function () {
     });
 
     it('add multiple values to set', function () {
-        var set = new Client.CRDT.Set(client, {
+        var set = new Riak.CRDT.Set(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -49,7 +49,7 @@ describe('CRDT Set', function () {
     });
 
     it('remove single value from set', function () {
-        var set = new Client.CRDT.Set(client, {
+        var set = new Riak.CRDT.Set(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -61,7 +61,7 @@ describe('CRDT Set', function () {
     });
 
     it('remove multiple values from set', function () {
-        var set = new Client.CRDT.Set(client, {
+        var set = new Riak.CRDT.Set(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -73,7 +73,7 @@ describe('CRDT Set', function () {
     });
 
     it('set keeps unique values', function () {
-        var set = new Client.CRDT.Set(client, {
+        var set = new Riak.CRDT.Set(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -86,7 +86,7 @@ describe('CRDT Set', function () {
     });
 
     it('should be able to save/load new set', function () {
-        var set = new Client.CRDT.Set(client, {
+        var set = new Riak.CRDT.Set(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -102,7 +102,7 @@ describe('CRDT Set', function () {
     });
 
     it('should be able to save/load new set with custom key', function () {
-        var set = new Client.CRDT.Set(client, {
+        var set = new Riak.CRDT.Set(client, {
             bucket: bucket,
             type: bucketType,
             key: uniqueKey('set')
@@ -119,7 +119,7 @@ describe('CRDT Set', function () {
 
     it('should be able to save/load existing set', function () {
         var key = uniqueKey('set');
-        var set = new Client.CRDT.Set(client, {
+        var set = new Riak.CRDT.Set(client, {
             bucket: bucket,
             type: bucketType,
             key: key
@@ -131,7 +131,7 @@ describe('CRDT Set', function () {
             var _set;
             v.should.be.eql(['a1', 'a2', 'a3']);
 
-            _set = new Client.CRDT.Set(client, {
+            _set = new Riak.CRDT.Set(client, {
                 bucket: bucket,
                 type: bucketType,
                 key: key

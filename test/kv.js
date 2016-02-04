@@ -3,10 +3,10 @@
 /* global describe, it, before, after, expect, uniqueKey  */
 
 // var Promise = require('bluebird');
-var Client  = require('..');
+var Riak  = require('..');
 // var _       = require('lodash');
 var bucket = 'no-riak-test-kv';
-var client = new Client();
+var client = new Riak.Client();
 
 describe('Key/Value operations', function () {
     before(function () {
@@ -165,7 +165,7 @@ describe('Key/Value operations', function () {
     });
 
     it('put - plain object (autoJSON = false)', function () {
-        var _client = new Client({
+        var _client = new Riak.Client({
             autoJSON: false
         });
 

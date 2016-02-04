@@ -4,15 +4,15 @@
 
 // var Promise = require('bluebird');
 // var _ = require('lodash');
-var Client  = require('../..');
-var client = new Client();
+var Riak  = require('../..');
+var client = new Riak.Client();
 
 var bucket = 'no_riak_test_crdt_counter_bucket';
 var bucketType = 'no_riak_test_crdt_counter';
 
 describe('CRDT Counter', function () {
     it('should create new Counter', function () {
-        var counter = new Client.CRDT.Counter(client, {
+        var counter = new Riak.CRDT.Counter(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -25,7 +25,7 @@ describe('CRDT Counter', function () {
     });
 
     it('increment by 1 if no value given', function () {
-        var counter = new Client.CRDT.Counter(client, {
+        var counter = new Riak.CRDT.Counter(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -40,7 +40,7 @@ describe('CRDT Counter', function () {
     });
 
     it('increment with positive value', function () {
-        var counter = new Client.CRDT.Counter(client, {
+        var counter = new Riak.CRDT.Counter(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -51,7 +51,7 @@ describe('CRDT Counter', function () {
     });
 
     it('increment with negative value', function () {
-        var counter = new Client.CRDT.Counter(client, {
+        var counter = new Riak.CRDT.Counter(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -62,7 +62,7 @@ describe('CRDT Counter', function () {
     });
 
     it('new counter should be able to save/load', function () {
-        var counter = new Client.CRDT.Counter(client, {
+        var counter = new Riak.CRDT.Counter(client, {
             bucket: bucket,
             type: bucketType
         });
@@ -78,7 +78,7 @@ describe('CRDT Counter', function () {
 
     it('should create new Counter with custom key', function () {
         var key = uniqueKey('counter');
-        var counter = new Client.CRDT.Counter(client, {
+        var counter = new Riak.CRDT.Counter(client, {
             bucket: bucket,
             type: bucketType,
             key: key
@@ -86,7 +86,7 @@ describe('CRDT Counter', function () {
 
         return counter.increment(2).increment(3).save()
         .then(function () {
-            var _counter = new Client.CRDT.Counter(client, {
+            var _counter = new Riak.CRDT.Counter(client, {
                 bucket: bucket,
                 type: bucketType,
                 key: key
@@ -102,7 +102,7 @@ describe('CRDT Counter', function () {
     it('should update existing counter', function () {
         var key = uniqueKey('counter');
 
-        var counter = new Client.CRDT.Counter(client, {
+        var counter = new Riak.CRDT.Counter(client, {
             bucket: bucket,
             type: bucketType,
             key: key
@@ -117,7 +117,7 @@ describe('CRDT Counter', function () {
             return counter.increment(1).save();
         })
         .then(function () {
-            var _counter = new Client.CRDT.Counter(client, {
+            var _counter = new Riak.CRDT.Counter(client, {
                 bucket: bucket,
                 type: bucketType,
                 key: key

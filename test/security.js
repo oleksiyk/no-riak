@@ -5,7 +5,7 @@
 // var Promise = require('bluebird');
 // var _ = require('lodash');
 var exec   = require('child_process').exec;
-var Client = require('..');
+var Riak = require('..');
 
 var auth = {
     user: 'no-riak',
@@ -21,11 +21,11 @@ describe('Authentication and TLS', function () {
 
     describe('Security disabled', function () {
         it('returns error when trying to start TLS', function () {
-            var client = new Client({
+            var client = new Riak.Client({
                 auth: auth
             });
 
-            return client.ping().should.be.rejectedWith(Client.RiakError, 'Security not enabled; STARTTLS not allowed');
+            return client.ping().should.be.rejectedWith(Riak.RiakError, 'Security not enabled; STARTTLS not allowed');
         });
     });
 
@@ -36,7 +36,7 @@ describe('Authentication and TLS', function () {
         });
 
         it('should start TLS and authenticate', function () {
-            var client = new Client({
+            var client = new Riak.Client({
                 auth: auth
             });
 
@@ -44,7 +44,7 @@ describe('Authentication and TLS', function () {
         });
 
         it('should not allow wrong credentials', function () {
-            var client = new Client({
+            var client = new Riak.Client({
                 auth: {
                     user: 'no-riak-wrong',
                     password: 'secret-wrong'
@@ -53,19 +53,19 @@ describe('Authentication and TLS', function () {
 
             this.timeout(10000);
 
-            return client.ping().should.be.rejectedWith(Client.RiakError, 'Authentication failed');
+            return client.ping().should.be.rejectedWith(Riak.RiakError, 'Authentication failed');
         });
 
         it('should not allow missing credentials', function () {
-            var client = new Client();
+            var client = new Riak.Client();
 
             this.timeout(10000);
 
-            return client.ping().should.be.rejectedWith(Client.RiakError, 'Security is enabled, please STARTTLS first');
+            return client.ping().should.be.rejectedWith(Riak.RiakError, 'Security is enabled, please STARTTLS first');
         });
 
         it('should allow put and get', function () {
-            var client = new Client({
+            var client = new Riak.Client({
                 auth: auth
             });
 
@@ -84,7 +84,7 @@ describe('Authentication and TLS', function () {
         });
 
         it('should not allow delete', function () {
-            var client = new Client({
+            var client = new Riak.Client({
                 auth: auth
             });
 
@@ -100,7 +100,7 @@ describe('Authentication and TLS', function () {
                     key: result.key
                 });
             })
-            .should.be.rejectedWith(Client.RiakError, 'riak_kv.delete');
+            .should.be.rejectedWith(Riak.RiakError, 'riak_kv.delete');
         });
     });
 });

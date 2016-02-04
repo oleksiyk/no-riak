@@ -4,13 +4,13 @@
 
 var Promise = require('bluebird');
 var _ = require('lodash');
-var Client  = require('..');
+var Riak  = require('..');
 
 var bucket = 'no-riak-test-kv';
 
 describe('Server connections', function () {
     it('pool should split connections according to server weights', function () {
-        var client = new Client({
+        var client = new Riak.Client({
             connectionString: '10.0.1.1:8087:4,10.0.1.2:8087:3,10.0.1.3:8087:2',
             pool: {
                 min: 9
@@ -30,7 +30,7 @@ describe('Server connections', function () {
     });
 
     it('failed connection should be rejected with ConnectionError', function () {
-        var client = new Client({
+        var client = new Riak.Client({
             connectionString: '127.1.2.3:8087',
             connectionTimeout: 100
         });
@@ -47,7 +47,7 @@ describe('Server connections', function () {
     });
 
     it('should create up to max connections and put new requests in waiting queue', function () {
-        var client = new Client({
+        var client = new Riak.Client({
             pool: {
                 min: 5,
                 max: 20
@@ -67,7 +67,7 @@ describe('Server connections', function () {
     });
 
     it('should close excessive connections after the burst', function () {
-        var client = new Client({
+        var client = new Riak.Client({
             pool: {
                 min: 5,
                 max: 20,
@@ -98,7 +98,7 @@ describe('Server connections', function () {
     });
 
     it('Connection should be able to grow its buffer', function () {
-        var client = new Client({
+        var client = new Riak.Client({
             connectionBufSize: 10 // 10 bytes
         });
 

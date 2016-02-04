@@ -3,11 +3,11 @@
 /* global describe, it, before, after, expect, uniqueKey  */
 
 var Promise = require('bluebird');
-var Client  = require('..');
+var Riak  = require('..');
 var _       = require('lodash');
 
 var bucket = 'no-riak-test-kv';
-var client = new Client();
+var client = new Riak.Client();
 
 describe('Map/Reduce', function () {
     it('map/reduce', function () {
@@ -125,6 +125,6 @@ describe('Map/Reduce', function () {
                     }
                 }]
             }
-        }).should.be.rejectedWith(Client.RiakError);
+        }).should.be.rejectedWith(Riak.RiakError);
     });
 });
