@@ -1,14 +1,14 @@
 {
     "name": "no-riak",
-    "description": "Riak 2.x client for Node.JS",
+    "description": "Riak 2.x client with weighted load balancing and easy to use wrappers over CRDT data types",
     "homepage": "http://github.com/oleksiyk/no-riak",
     "author": {
         "name": "Oleksiy Krivoshey",
         "email": "oleksiyk@gmail.com"
     },
-    "version": "1.0.1",
+    "version": "1.0.2",
     "main": "./lib/index.js",
-    "keywords": ["riak"],
+    "keywords": ["riak", "client", "node", "crdt"],
     "dependencies": {
         "bluebird": "^3.1.5",
         "lodash": "^4.2.0",
