@@ -337,4 +337,52 @@ describe('CRDT Map', function () {
             v.key1.key1_1.toNumber().should.be.eql(-3);
         });
     });
+
+    it('map register', function () {
+        var map = new Riak.CRDT.Map(client, {
+            bucket: bucket,
+            type: bucketType
+        });
+
+        return map
+        .update('key1', new Riak.CRDT.Map.Register().set('a1'))
+        .save()
+        .call('value')
+        .then(function (v) {
+            var register;
+            v.should.be.an('object');
+            v.should.have.property('key1');
+            v.key1.should.be.eql('a1');
+
+            register = map.get('key1');
+            register.should.be.an.instanceOf(Riak.CRDT.Map.Register);
+
+            register.set('a2');
+
+            return map.save().call('value');
+        })
+        .then(function (v) {
+            v.should.be.an('object');
+            v.should.have.property('key1');
+            v.key1.should.be.eql('a2');
+        });
+    });
+
+    it('map register, strings = false', function () {
+        var map = new Riak.CRDT.Map(client, {
+            bucket: bucket,
+            type: bucketType,
+            strings: false
+        });
+
+        return map
+        .update('key1', new Riak.CRDT.Map.Register().set('a1'))
+        .save()
+        .call('value')
+        .then(function (v) {
+            v.should.be.an('object');
+            v.should.have.property('key1');
+            Buffer.isBuffer(v.key1).should.be.eql(true);
+        });
+    });
 });
