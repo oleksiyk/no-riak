@@ -4,7 +4,7 @@
 
 # no-riak
 
-__no-riak__ is a [Basho Riak KV](http://basho.com/products/riak-kv/) client for Node.js with easy to use [wrappers over CRDT data types](#crdt-data-types). 
+__no-riak__ is a [Basho Riak KV](http://basho.com/products/riak-kv/) client for Node.js with easy to use [wrappers over CRDT data types](#crdt-data-types).
 Supports Riak [authentication](#authentication), [conection pooling and balancing](#connection-pooling-and-load-balancing) across multiple servers according to their weight.
 All methods will return a [promise](https://github.com/petkaantonov/bluebird)
 
@@ -49,15 +49,15 @@ return client.put({
 
 ### Key/Value operations
 
-- `get(params)` 
+- `get(params)`
 - `put(params)`
 - `del(params)`
 - `update(params)`
 - `listKeys(params)`
 - `updateCounter(params)`
 - `getCounter(params)`
- 
-### Secondary indexes 
+
+### Secondary indexes
 
 - `index(params)`
 
@@ -90,7 +90,7 @@ return Promise.all([0, 1, 2].map(function (i) {
 })
 .then(function (result) {
     // result => { results: [ 'key0', 'key1' ], continuation: 'g20AAAAEa2V5MQ==' }
-    
+
     // now get rest of search results:
     return client.index({
         bucket: bucket,
@@ -108,7 +108,7 @@ return Promise.all([0, 1, 2].map(function (i) {
 ### Map/Reduce
 
 - `mapReduce()`
- 
+
 Example:
 
 ```javascript
@@ -157,7 +157,7 @@ return Promise.all([0, 1, 2].map(function (i) {
     // [ [ { num: 10 }, { num: 12 }, { num: 11 } ], // thats phase 1 results
     //   [ 10, 12, 11 ], // phase 2 results
     //   [ 33 ] ] // phase 3 results
-    
+
     // each index in results array is an array of results for each map/reduce phase
     // even if phase results were stripped with keep: false
 });
@@ -191,7 +191,7 @@ return client.setBucket({
 
 ## Authentication
 
-Enable authentication in Riak, create user, add corresponding grants, example: 
+Enable authentication in Riak, create user, add corresponding grants, example:
 
 ```bash
 riak-admin security enable
@@ -310,7 +310,7 @@ var set = new Riak.CRDT.Set(client, {
 
 Represents a list of name/value pairs. Values can be Counters, Sets, Maps, Registers and Flags.
 
-- `key()` [sync] get map key 
+- `key()` [sync] get map key
 - `value()` [sync] return map value
 - `load()` [async] load map value from Riak and return `this` in a Promise
 - `save()` [async] save map to Riak and return `this` in a Promise
@@ -336,7 +336,7 @@ return map
     .call('value')
     .then(function (v) {
         console.log(v); // => { key1: { low: -5, high: -1, unsigned: false }, key2: [ 'a1', 'a3' ] }
-    });        
+    });
 ```
 
 Using `get(name)` to operate on map fields
@@ -351,7 +351,7 @@ var map = new Riak.CRDT.Map(client, {
 map
     .update('key1', new Riak.CRDT.Counter().increment(-5))
     .update('key2', new Riak.CRDT.Set().add('a1', 'a2', 'a3'));
-    
+
 set = map.get('key2');
 set.remove('a2');
 
@@ -402,3 +402,6 @@ var client = new Riak.Client({
 ```
 
 Here, 9 connections will be created when client starts, 4 of which will connect to '10.0.1.1', 3 to '10.0.1.2' and 2 to '10.0.1.3'. When there is a demand for more connections, no-riak will create up to `pool.max` connections and will also split them across servers considering their weight.
+
+If there was a connection error with any of the servers this server will be removed from the weighted round robin pool (by setting weight to 0) and all its connections will be closed.
+__no-riak__ will then periodically check disabled servers and restore them with their original weight once they are back online.
