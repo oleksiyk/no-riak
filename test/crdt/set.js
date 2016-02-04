@@ -30,10 +30,7 @@ describe('CRDT Set', function () {
             type: bucketType
         });
 
-        return set.add('a1').value()
-        .then(function (v) {
-            v.should.be.eql(['a1']);
-        });
+        set.add('a1').value().should.be.eql(['a1']);
     });
 
     it('add multiple values to set', function () {
@@ -42,10 +39,7 @@ describe('CRDT Set', function () {
             type: bucketType
         });
 
-        return set.add('a1', 'a2', 'a3').value()
-        .then(function (v) {
-            v.should.be.eql(['a1', 'a2', 'a3']);
-        });
+        set.add('a1', 'a2', 'a3').value().should.be.eql(['a1', 'a2', 'a3']);
     });
 
     it('remove single value from set', function () {
@@ -54,10 +48,7 @@ describe('CRDT Set', function () {
             type: bucketType
         });
 
-        return set.add('a1', 'a2', 'a3').remove('a2').value()
-        .then(function (v) {
-            v.should.be.eql(['a1', 'a3']);
-        });
+        set.add('a1', 'a2', 'a3').remove('a2').value().should.be.eql(['a1', 'a3']);
     });
 
     it('remove multiple values from set', function () {
@@ -66,10 +57,7 @@ describe('CRDT Set', function () {
             type: bucketType
         });
 
-        return set.add('a1', 'a2', 'a3').remove('a2', 'a1').value()
-        .then(function (v) {
-            v.should.be.eql(['a3']);
-        });
+        set.add('a1', 'a2', 'a3').remove('a2', 'a1').value().should.be.eql(['a3']);
     });
 
     it('set keeps unique values', function () {
@@ -78,11 +66,7 @@ describe('CRDT Set', function () {
             type: bucketType
         });
 
-        return set
-        .add('a1', 'a2', 'a3', 'a2', 'a2', 'a3').value()
-        .then(function (v) {
-            v.should.be.eql(['a1', 'a2', 'a3']);
-        });
+        set.add('a1', 'a2', 'a3', 'a2', 'a2', 'a3').value().should.be.eql(['a1', 'a2', 'a3']);
     });
 
     it('should be able to save/load new set', function () {
@@ -98,6 +82,21 @@ describe('CRDT Set', function () {
         .then(function (v) {
             set.key().should.be.a('string').and.have.length.gt(0);
             v.should.be.eql(['a1', 'a2', 'a3']);
+        });
+    });
+
+    it('should not convert values to strings with strings=false', function () {
+        var set = new Riak.CRDT.Set(client, {
+            bucket: bucket,
+            type: bucketType,
+            strings: false
+        });
+
+        return set
+        .add('a1').save().call('value')
+        .then(function (v) {
+            Buffer.isBuffer(v[0]).should.be.eql(true);
+            v[0].toString().should.be.eql('a1');
         });
     });
 
@@ -142,7 +141,7 @@ describe('CRDT Set', function () {
         .then(function (v) {
             v.should.be.eql(['a1', 'a3', 'a4']);
 
-            return set.add('a5').value();
+            return set.add('a5').load().call('value');
         })
         .then(function (v) {
             v.should.be.eql(['a1', 'a3', 'a4', 'a5']);

@@ -18,5 +18,5 @@ var sinonChai = require('sinon-chai');
 global.chai.use(sinonChai);
 
 global.uniqueKey = function (prefix) {
-    return (prefix || 'no-riak-test') + '-' + Math.floor(1000000 * Math.random());
+    return (prefix || 'no-riak-test') + '-' + Math.floor(Date.now() * Math.random());
 };

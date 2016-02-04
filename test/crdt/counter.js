@@ -30,13 +30,8 @@ describe('CRDT Counter', function () {
             type: bucketType
         });
 
-        return counter.value().then(function (v) {
-            v.toNumber().should.be.eql(0);
-            return counter.increment().value();
-        })
-        .then(function (v) {
-            v.toNumber().should.be.eql(1);
-        });
+        counter.value().toNumber().should.be.eql(0);
+        counter.increment().value().toNumber().should.be.eql(1);
     });
 
     it('increment with positive value', function () {
@@ -45,9 +40,7 @@ describe('CRDT Counter', function () {
             type: bucketType
         });
 
-        return counter.increment(5).value().then(function (v) {
-            v.toNumber().should.be.eql(5);
-        });
+        counter.increment(5).value().toNumber().should.be.eql(5);
     });
 
     it('increment with negative value', function () {
@@ -56,9 +49,7 @@ describe('CRDT Counter', function () {
             type: bucketType
         });
 
-        return counter.increment(-5).value().then(function (v) {
-            v.toNumber().should.be.eql(-5);
-        });
+        counter.increment(-5).value().toNumber().should.be.eql(-5);
     });
 
     it('new counter should be able to save/load', function () {
@@ -92,7 +83,7 @@ describe('CRDT Counter', function () {
                 key: key
             });
 
-            return _counter.value();
+            return _counter.load().call('value');
         })
         .then(function (v) {
             v.toNumber().should.be.eql(5);
@@ -123,7 +114,7 @@ describe('CRDT Counter', function () {
                 key: key
             });
 
-            return _counter.increment(5).value()
+            return _counter.increment(5).load().call('value')
             .then(function (v) {
                 v.toNumber().should.be.eql(4);
 
@@ -131,7 +122,7 @@ describe('CRDT Counter', function () {
             });
         })
         .then(function () {
-            return counter.value();
+            return counter.load().call('value');
         })
         .then(function (v) {
             v.toNumber().should.be.eql(4);
