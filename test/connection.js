@@ -20,12 +20,13 @@ describe('Server connections', function () {
         // not good to look at internals, but..
         client.pool.connections.free.length.should.be.eql(9);
 
-        _.countBy(client.pool.connections.free, function (c) {
-            return c.options.host + ':' + c.options.port;
-        }).should.be.eql({
-            '10.0.1.1:8087': 4,
-            '10.0.1.2:8087': 3,
-            '10.0.1.3:8087': 2
+        client.pool.count().should.be.eql({
+            free: {
+                '10.0.1.1:8087': 4,
+                '10.0.1.2:8087': 3,
+                '10.0.1.3:8087': 2
+            },
+            busy: {}
         });
     });
 
@@ -41,8 +42,7 @@ describe('Server connections', function () {
 
             err.toJSON().should.be.an('object');
             err.toJSON().should.have.property('name', 'ConnectionError');
-            err.toJSON().should.have.property('host', '127.1.2.3');
-            err.toJSON().should.have.property('port', 8087);
+            err.toJSON().should.have.property('server', '127.1.2.3:8087');
         });
     });
 
@@ -124,6 +124,28 @@ describe('Server connections', function () {
             result.content.should.have.length(1);
             result.content[0].should.have.property('value');
             result.content[0].value.should.be.eql(data);
+        });
+    });
+
+    it('should disable failed server', function () {
+        var client = new Riak.Client({
+            connectionString: '127.1.2.3:8087:10,127.0.0.1:8087:1',
+            connectionTimeout: 100,
+            pool: {
+                min: 9
+            }
+        });
+
+        return client.ping().catch(function (err) {
+            err.should.be.an.instanceOf(Riak.ConnectionError);
+
+            return client.ping();
+        })
+        .then(function () {
+            client.pool.count().should.be.eql({
+                free: { '127.0.0.1:8087': 1 },
+                busy: {}
+            });
         });
     });
 });
