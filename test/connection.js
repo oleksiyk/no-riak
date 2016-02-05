@@ -30,7 +30,7 @@ describe('Server connections', function () {
         });
     });
 
-    it('failed connection should be rejected with ConnectionError', function () {
+    it('failed connection should be rejected with RiakConnectionError', function () {
         var client = new Riak.Client({
             connectionString: '127.1.2.3:8087',
             connectionTimeout: 100
@@ -41,7 +41,7 @@ describe('Server connections', function () {
             err.toString().should.include('8087');
 
             err.toJSON().should.be.an('object');
-            err.toJSON().should.have.property('name', 'ConnectionError');
+            err.toJSON().should.have.property('name', 'RiakConnectionError');
             err.toJSON().should.have.property('server', '127.1.2.3:8087');
         });
     });
@@ -137,7 +137,7 @@ describe('Server connections', function () {
         });
 
         return client.ping().catch(function (err) {
-            err.should.be.an.instanceOf(Riak.ConnectionError);
+            err.should.be.an.instanceOf(Riak.RiakConnectionError);
 
             return client.ping();
         })
