@@ -16,7 +16,7 @@ all: lint test coverage
 
 # Tests
 test: dt-setup
-	@$(ISTANBUL) cover --report text --report html _mocha
+	@$(ISTANBUL) cover --report lcov --report text --report html _mocha
 
 # Check code style
 lint:

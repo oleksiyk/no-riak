@@ -3,19 +3,27 @@ node_js:
   - "0.10"
   - "4.2"
 
+addons:
+  code_climate:
+    repo_token: 14d7a5ccb4d56025c96c7ec79e5e02b17266f560074de91990794f83bedb7742
+
 before_script:
-  - "sudo apt-get purge riak"
-  - "curl http://s3.amazonaws.com/downloads.basho.com/riak/2.1/2.1.3/ubuntu/precise/riak_2.1.3-1_amd64.deb -O"
-  - "sudo dpkg -i riak_2.1.3-1_amd64.deb"
-  - "sudo cp -r test/ssl/ /etc/riak/"
-  - "pushd /etc/riak"
-  - "sudo sed -i -e 's/search = off/search = on/' riak.conf"
-  - "sudo sed -i -e 's/storage_backend = bitcask/storage_backend = leveldb/' riak.conf"
-  - "sudo sed -i -e 's|## ssl.certfile = $(platform_etc_dir)/cert.pem|ssl.certfile = $(platform_etc_dir)/ssl/certificate.crt|' riak.conf"
-  - "sudo sed -i -e 's|## ssl.keyfile = $(platform_etc_dir)/key.pem|ssl.keyfile = $(platform_etc_dir)/ssl/privateKey.key|' riak.conf"
-  - "popd"
-  - "sudo service riak start"
-  - 'until sudo riak-admin test > /dev/null 2>&1; do sleep 2; done'
+  - sudo apt-get purge riak
+  - curl http://s3.amazonaws.com/downloads.basho.com/riak/2.1/2.1.3/ubuntu/precise/riak_2.1.3-1_amd64.deb -O
+  - sudo dpkg -i riak_2.1.3-1_amd64.deb
+  - sudo cp -r test/ssl/ /etc/riak/
+  - pushd /etc/riak
+  - sudo sed -i -e 's/search = off/search = on/' riak.conf
+  - sudo sed -i -e 's/storage_backend = bitcask/storage_backend = leveldb/' riak.conf
+  - sudo sed -i -e 's|## ssl.certfile = $(platform_etc_dir)/cert.pem|ssl.certfile = $(platform_etc_dir)/ssl/certificate.crt|' riak.conf
+  - sudo sed -i -e 's|## ssl.keyfile = $(platform_etc_dir)/key.pem|ssl.keyfile = $(platform_etc_dir)/ssl/privateKey.key|' riak.conf
+  - popd
+  - sudo service riak start
+  - until sudo riak-admin test > /dev/null 2>&1; do sleep 2; done
 
 env:
   - RIAK_ADMIN_USE_SUDO=true
+
+after_script:
+  - npm install codeclimate-test-reporter
+  - codeclimate-test-reporter < coverage/lcov.info
