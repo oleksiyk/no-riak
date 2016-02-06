@@ -253,7 +253,9 @@ describe('Key/Value operations', function () {
             bucket: bucket,
             key: key,
             content: {
-                value: 'hello1'
+                value: {
+                    msg: 'hello1'
+                }
             }
         })
         .then(function () {
@@ -261,7 +263,9 @@ describe('Key/Value operations', function () {
                 bucket: bucket,
                 key: key,
                 content: {
-                    value: 'hello2'
+                    value: {
+                        msg: 'hello2'
+                    }
                 }
             });
         })
@@ -276,9 +280,9 @@ describe('Key/Value operations', function () {
             result.should.have.property('content').that.is.an('array');
             result.content.should.have.length(2);
             result.content[0].should.have.property('value');
-            result.content[0].value.toString().should.be.eql('hello1');
+            result.content[0].value.should.be.an('object').and.have.property('msg', 'hello1');
             result.content[1].should.have.property('value');
-            result.content[1].value.toString().should.be.eql('hello2');
+            result.content[1].value.should.be.an('object').and.have.property('msg', 'hello2');
         });
     });
 
@@ -289,7 +293,9 @@ describe('Key/Value operations', function () {
             bucket: bucket,
             key: key,
             content: {
-                value: 'hello1'
+                value: {
+                    msg: 'hello1'
+                }
             }
         })
         .then(function () {
@@ -297,7 +303,9 @@ describe('Key/Value operations', function () {
                 bucket: bucket,
                 key: key,
                 content: {
-                    value: 'hello2'
+                    value: {
+                        msg: 'hello2'
+                    }
                 }
             });
         })
@@ -312,7 +320,7 @@ describe('Key/Value operations', function () {
             result.should.have.property('content').that.is.an('array');
             result.content.should.have.length(1);
             result.content[0].should.have.property('value');
-            result.content[0].value.toString().should.be.eql('hello2');
+            result.content[0].value.should.be.an('object').and.have.property('msg', 'hello2');
         });
     });
 

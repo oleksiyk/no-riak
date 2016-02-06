@@ -41,6 +41,17 @@ describe('Authentication and TLS', function () {
             return client.ping();
         });
 
+        it('should not start TLS because of rejectUnauthorized=true', function () {
+            var client = new Riak.Client({
+                auth: auth,
+                tls: {
+                    rejectUnauthorized: true
+                }
+            });
+
+            return client.ping().should.be.rejectedWith(Riak.RiakConnectionError);
+        });
+
         it('should not allow wrong credentials', function () {
             var client = new Riak.Client({
                 auth: {

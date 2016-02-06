@@ -148,4 +148,49 @@ describe('Server connections', function () {
             });
         });
     });
+
+    it('should throw No Connections when all servers disabled', function () {
+        var client = new Riak.Client({
+            connectionString: '127.1.2.3:8087:10, 127.1.2.4:8087:1',
+            connectionTimeout: 100
+        });
+
+        return client.ping().catch(function (err) {
+            err.should.be.an.instanceOf(Riak.RiakConnectionError);
+            err.should.have.property('server', '127.1.2.3:8087');
+            return client.ping();
+        })
+        .catch(function (err) {
+            err.should.be.an.instanceOf(Riak.RiakConnectionError);
+            err.should.have.property('server', '127.1.2.4:8087');
+            return client.ping();
+        })
+        .catch(function (err) {
+            err.should.be.an.instanceOf(Riak.RiakConnectionError).and.have.property('message', 'No connections available');
+        });
+    });
+
+    it('client.end() should return array of closed connections', function () {
+        var client = new Riak.Client({
+            connectionString: '127.1.2.3:8087:10, 127.1.2.4:8087:1',
+            pool: {
+                min: 5
+            },
+            connectionTimeout: 100
+        });
+
+        client.end().then(function (result) {
+            result.should.be.an('array').and.have.length(5);
+        });
+    });
+
+    it('Client should now allow wrong connectionString', function () {
+        function _createClient() {
+            var client = new Riak.Client({ // eslint-disable-line
+                connectionString: 'a,b,c',
+            });
+        }
+
+        expect(_createClient).to.throw('No Riak servers were defined');
+    });
 });
