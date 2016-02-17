@@ -407,8 +407,29 @@ var client = new Riak.Client({
 
 Here, 9 connections will be created when client starts, 4 of which will connect to '10.0.1.1', 3 to '10.0.1.2' and 2 to '10.0.1.3'. When there is a demand for more connections, no-riak will create up to `pool.max` connections and will also split them across servers considering their weight.
 
-If there was a connection error with any of the servers this server will be removed from the weighted round robin pool (by setting weight to 0) and all its connections will be closed.
+### Handling connection errors
+
+__no-riak__ can temporary remove the server whose connections are failing with some kind of network error (socket timeout, connection refused, etc).
+Such server will be assigned effective weight=0 and and so its connections will be replaced by connections to other servers in the cluster.
 __no-riak__ will then periodically check disabled servers and restore them with their original weight once they are back online.
+Two options help control this behaviour:
+
+* `maxConnectionErrors` - maximum number of connections errors for the server, defaults to 3
+* `maxConnectionErrorsPeriod` - period in ms which is considered when counting number of errors, defaults to 60000 (1 min)
+
+Default options mean that if any server had 3 or more errors within last minute then this server is marked as down.
+
+__no-riak__ will emit two events which can be useful to track disabled servers:
+
+* `net:hostdown` - emitted when host has reached configured error rate and is now temporary disabled
+* `net:hostup` - emitted when host is ready to accept new connections and will now take part in load balancing
+
+You can also query current connections pool state like this:
+
+```javascript
+var stats = client.pool.count();
+// => { free: { '10.0.1.5:8087': 5, '10.0.1.3:8087': 5, '10.0.1.4:8087': 5, '10.0.1.1:8087': 1, '10.0.1.2:8087': 1 }, busy: {} }
+```
 
 [badge-license]: https://img.shields.io/badge/License-MIT-green.svg
 [license]: https://github.com/oleksiyk/no-riak/blob/master/LICENSE

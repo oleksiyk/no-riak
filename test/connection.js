@@ -131,19 +131,22 @@ describe('Server connections', function () {
         var client = new Riak.Client({
             connectionString: '127.1.2.3:8087:10,127.0.0.1:8087:1',
             connectionTimeout: 100,
+            maxConnectionErrors: 3,
+            maxConnectionErrorsPeriod: 60 * 1000,
             pool: {
                 min: 9
             }
         });
 
-        return client.ping().catch(function (err) {
-            err.should.be.an.instanceOf(Riak.RiakConnectionError);
-
-            return client.ping();
+        // 3 failed requests and this connection should be closed
+        return Promise.map([0, 1, 2], function () {
+            return client.ping().catch(function (err) {
+                err.should.be.an.instanceOf(Riak.RiakConnectionError);
+            });
         })
         .then(function () {
             client.pool.count().should.be.eql({
-                free: { '127.0.0.1:8087': 1 },
+                free: { '127.0.0.1:8087': 2 },
                 busy: {}
             });
         });
@@ -152,7 +155,8 @@ describe('Server connections', function () {
     it('should throw No Connections when all servers disabled', function () {
         var client = new Riak.Client({
             connectionString: '127.1.2.3:8087:10, 127.1.2.4:8087:1',
-            connectionTimeout: 100
+            connectionTimeout: 100,
+            maxConnectionErrors: 1
         });
 
         return client.ping().catch(function (err) {
