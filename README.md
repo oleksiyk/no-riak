@@ -12,13 +12,31 @@ __no-riak__ is a [Basho Riak KV](http://basho.com/products/riak-kv/) client for 
 Supports Riak [authentication](#authentication), [conection pooling and balancing](#connection-pooling-and-load-balancing) across multiple servers according to their weight.
 All methods will return a [promise](https://github.com/petkaantonov/bluebird)
 
+* [Installation](#installation)
+* [Usage](#usage)
+  * [Quick example](#quick-example)
+  * [Key/Value operations](#keyvalue-operations)
+  * [Secondary indexes](#secondary-indexes)
+  * [Map/Reduce](#mapreduce)
+  * [Operations on Buckets and Bucket Types](#operations-on-buckets-and-bucket-types)
+* [Other operations](#other-operations)
+* [Authentication](#authentication)
+* [CRDT Data Types](#crdt-data-types)
+  * [Counter](#counter)
+  * [Set](#set)
+  * [Map](#map)
+* [Connection pooling and load balancing](#connection-pooling-and-load-balancing)
+  * [Handling connection errors](#handling-connection-errors)
+
 ## Installation
 
 ```
 npm install no-riak
 ```
 
-## Basic usage
+## Usage
+
+### Quick example
 
 ```javascript
 var Riak  = require('no-riak');
@@ -231,7 +249,7 @@ var client = new Riak.Client({
 });
 ```
 
-### CRDT Data Types
+## CRDT Data Types
 
 You can operate on a lower level with [Riak CRDT Data Types](http://docs.basho.com/riak/latest/dev/using/data-types/) with the following methods:
 
@@ -240,7 +258,7 @@ You can operate on a lower level with [Riak CRDT Data Types](http://docs.basho.c
 
 __no-riak__ also provides easy to use wrappers over Map, Set and Counter.
 
-#### Counter
+### Counter
 
 Represents signed 64 bit integer (via [long.js](https://github.com/dcodeIO/long.js))
 
@@ -310,7 +328,7 @@ var set = new Riak.CRDT.Set(client, {
 });
 ```
 
-#### Map
+### Map
 
 Represents a list of name/value pairs. Values can be Counters, Sets, Maps, Registers and Flags.
 
