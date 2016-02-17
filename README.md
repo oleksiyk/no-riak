@@ -2,8 +2,8 @@
 [![Test Coverage][badge-coverage]][coverage]
 [![bitHound Code][badge-bithound-code]][bithound-code]
 [![bitHound Overall Score][badge-bithound-overall]][bithound-overall]
-[![Dependencies][badge-deps]][deps]
-[![DevDependencies][badge-dev-deps]][dev-deps]
+[![bitHound Dependencies][badge-bithound-deps]][bithound-deps]
+[![bitHound Dev Dependencies][badge-bithound-dev-deps]][bithound-dev-deps]
 [![license][badge-license]][license]
 
 # no-riak
@@ -424,3 +424,7 @@ __no-riak__ will then periodically check disabled servers and restore them with 
 [bithound-code]: https://www.bithound.io/github/oleksiyk/no-riak
 [badge-bithound-overall]: https://www.bithound.io/github/oleksiyk/no-riak/badges/score.svg
 [bithound-overall]: https://www.bithound.io/github/oleksiyk/no-riak
+[badge-bithound-deps]: https://www.bithound.io/github/oleksiyk/no-riak/badges/dependencies.svg
+[bithound-deps]: https://www.bithound.io/github/oleksiyk/no-riak/master/dependencies/npm
+[badge-bithound-dev-deps]: https://www.bithound.io/github/oleksiyk/no-riak/badges/devDependencies.svg
+[bithound-dev-deps]: https://www.bithound.io/github/oleksiyk/no-riak/master/dependencies/npm
