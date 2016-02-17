@@ -1,7 +1,10 @@
-[![Build Status](https://travis-ci.org/oleksiyk/no-riak.svg)](https://travis-ci.org/oleksiyk/no-riak)
-[![Test Coverage](https://codeclimate.com/github/oleksiyk/no-riak/badges/coverage.svg)](https://codeclimate.com/github/oleksiyk/no-riak/coverage)
-[![Dependencies](https://david-dm.org/oleksiyk/no-riak.svg)](https://david-dm.org/oleksiyk/no-riak)
-[![DevDependencies](https://david-dm.org/oleksiyk/no-riak/dev-status.svg)](https://david-dm.org/oleksiyk/no-riak#info=devDependencies)
+[![Build Status][badge-travis]][travis]
+[![Test Coverage][badge-coverage]][coverage]
+[![bitHound Code][badge-bithound-code]][bithound-code]
+[![bitHound Overall Score][badge-bithound-overall]][bithound-overall]
+[![Dependencies][badge-deps]][deps]
+[![DevDependencies][badge-dev-deps]][dev-deps]
+[![license][badge-license]][license]
 
 # no-riak
 
@@ -406,3 +409,18 @@ Here, 9 connections will be created when client starts, 4 of which will connect 
 
 If there was a connection error with any of the servers this server will be removed from the weighted round robin pool (by setting weight to 0) and all its connections will be closed.
 __no-riak__ will then periodically check disabled servers and restore them with their original weight once they are back online.
+
+[badge-license]: https://img.shields.io/badge/License-MIT-green.svg
+[license]: https://github.com/oleksiyk/no-riak/blob/master/LICENSE
+[badge-travis]: https://api.travis-ci.org/oleksiyk/no-riak.svg?branch=master
+[travis]: https://travis-ci.org/oleksiyk/no-riak
+[badge-coverage]: https://codeclimate.com/github/oleksiyk/no-riak/badges/coverage.svg
+[coverage]: https://codeclimate.com/github/oleksiyk/no-riak/coverage
+[badge-deps]: https://david-dm.org/oleksiyk/no-riak.svg
+[deps]: https://david-dm.org/oleksiyk/no-riak
+[badge-dev-deps]: https://david-dm.org/oleksiyk/no-riak/dev-status.svg
+[dev-deps]: https://david-dm.org/oleksiyk/no-riak#info=devDependencies
+[badge-bithound-code]: https://www.bithound.io/github/oleksiyk/no-riak/badges/code.svg
+[bithound-code]: https://www.bithound.io/github/oleksiyk/no-riak
+[badge-bithound-overall]: https://www.bithound.io/github/oleksiyk/no-riak/badges/score.svg
+[bithound-overall]: https://www.bithound.io/github/oleksiyk/no-riak
