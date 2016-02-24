@@ -32,6 +32,16 @@ describe('CRDT Counter', function () {
         counter.increment().value().toNumber().should.be.eql(1);
     });
 
+    it('should not increment by 1 if value is 0', function () {
+        var counter = new Riak.CRDT.Counter(client, {
+            bucket: bucket,
+            type: bucketType
+        });
+
+        counter.value().toNumber().should.be.eql(0);
+        counter.increment(0).value().toNumber().should.be.eql(0);
+    });
+
     it('increment with positive value', function () {
         var counter = new Riak.CRDT.Counter(client, {
             bucket: bucket,
