@@ -334,7 +334,7 @@ Represents a list of name/value pairs. Values can be Counters, Sets, Maps, Regis
 - `value()` [sync] return map value
 - `load()` [async] load map value from Riak and return `this` in a Promise
 - `save()` [async] save map to Riak and return `this` in a Promise
-- `update(name, value)` [sync] add or update new field to map, returns `this`
+- `update(name, value)` [sync] update existing field or add new field to map, returns `this`
 - `remove(name, type)` [sync] remove existing field from the map. `constructor` is one of the following: `Riak.CRDT.Counter`, `Riak.CRDT.Set`, `Riak.CRDT.Map`, `Riak.CRDT.Map.Register`, `Riak.CRDT.Map.Flag`
 - `get(name)` [sync] get Riak.CRDT.* instance for corresponding field `name`. This instance can be used to update the map.
 
