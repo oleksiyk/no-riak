@@ -30,10 +30,11 @@ describe('Server connections', function () {
         });
     });
 
-    it('failed connection should be rejected with RiakConnectionError', function () {
+    it('failed connection should be rejected with RiakConnectionError (retries=0)', function () {
         var client = new Riak.Client({
             connectionString: '127.1.2.3:8087',
-            connectionTimeout: 100
+            connectionTimeout: 100,
+            retries: 0
         });
 
         return client.init().catch(function (err) {
@@ -44,6 +45,28 @@ describe('Server connections', function () {
             err.toJSON().should.have.property('name', 'RiakConnectionError');
             err.toJSON().should.have.property('server', '127.1.2.3:8087');
         });
+    });
+
+    it('failed connection should be rejected with "no more connections" (retries > maxConnectionErrors)', function () {
+        var client = new Riak.Client({
+            connectionString: '127.1.2.3:8087',
+            connectionTimeout: 100,
+            retries: 3,
+            maxConnectionErrors: 3
+        });
+
+        return client.init().should.eventually.be.rejectedWith('No Riak connections available: all hosts down');
+    });
+
+    it('should throw No Connections when all servers disabled', function () {
+        var client = new Riak.Client({
+            connectionString: '127.1.2.3:8087:10, 127.1.2.4:8087:1',
+            connectionTimeout: 100,
+            maxConnectionErrors: 1,
+            retries: 3
+        });
+
+        return client.ping().should.be.rejectedWith('Error: No Riak connections available: all hosts down');
     });
 
     it('should create up to max connections and put new requests in waiting queue', function () {
@@ -133,6 +156,7 @@ describe('Server connections', function () {
             connectionTimeout: 100,
             maxConnectionErrors: 3,
             maxConnectionErrorsPeriod: 60 * 1000,
+            retries: 0,
             pool: {
                 min: 9
             }
@@ -149,28 +173,6 @@ describe('Server connections', function () {
                 free: { '127.0.0.1:8087': 2 },
                 busy: {}
             });
-        });
-    });
-
-    it('should throw No Connections when all servers disabled', function () {
-        var client = new Riak.Client({
-            connectionString: '127.1.2.3:8087:10, 127.1.2.4:8087:1',
-            connectionTimeout: 100,
-            maxConnectionErrors: 1
-        });
-
-        return client.ping().catch(function (err) {
-            err.should.be.an.instanceOf(Riak.RiakConnectionError);
-            err.should.have.property('server', '127.1.2.3:8087');
-            return client.ping();
-        })
-        .catch(function (err) {
-            err.should.be.an.instanceOf(Riak.RiakConnectionError);
-            err.should.have.property('server', '127.1.2.4:8087');
-            return client.ping();
-        })
-        .catch(function (err) {
-            err.should.be.an.instanceOf(Riak.RiakConnectionError).and.have.property('message', 'No connections available');
         });
     });
 

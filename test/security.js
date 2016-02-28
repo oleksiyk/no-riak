@@ -46,7 +46,9 @@ describe('Authentication and TLS', function () {
                 auth: auth,
                 tls: {
                     rejectUnauthorized: true
-                }
+                },
+                maxConnectionErrors: Infinity,
+                retries: 0
             });
 
             return client.ping().should.be.rejectedWith(Riak.RiakConnectionError);
