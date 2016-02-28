@@ -425,6 +425,9 @@ Here, 9 connections will be created when client starts, 4 of which will connect 
 
 ### Handling connection errors
 
+__no-riak__ will retry any request that failed due to network (connection) error, the corresponding option is
+* `retries` - number of retries for each failed request, defaults to 3
+
 __no-riak__ can temporary remove the server whose connections are failing with some kind of network error (socket timeout, connection refused, etc).
 Such server will be assigned effective weight=0 and and so its connections will be replaced by connections to other servers in the cluster.
 __no-riak__ will then periodically check disabled servers and restore them with their original weight once they are back online.
