@@ -30,6 +30,18 @@ describe('Key/Value operations', function () {
         });
     });
 
+    it('put - value:null', function () {
+        return client.put({
+            bucket: bucket,
+            content: {
+                value: null
+            }
+        })
+        .then(function (result) {
+            result.should.be.an('object').and.have.property('key').that.is.a('string');
+        });
+    });
+
     it('put - return_head: true', function () {
         return client.put({
             bucket: bucket,
