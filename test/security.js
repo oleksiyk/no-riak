@@ -14,6 +14,7 @@ var bucket = 'no-riak-test-kv';
 
 describe('Authentication and TLS', function () {
     after(function (done) {
+        this.timeout(4000);
         exec('make disable-security', { env: process.env }, done);
     });
 
