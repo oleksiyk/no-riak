@@ -18,7 +18,7 @@
   "dependencies": {
     "bin-protocol": "^3.0.0",
     "bluebird": "^3.3.3",
-    "lodash": "^4.5.0",
+    "lodash": "^4.17.11",
     "long": "^3.0.3",
     "sinon": "^1.4.0",
     "wrr-pool": "^1.1.2"
