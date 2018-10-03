@@ -16,7 +16,7 @@
     "riak"
   ],
   "dependencies": {
-    "bin-protocol": "^3.0.0",
+    "bin-protocol": "^3.0.4",
     "bluebird": "^3.3.3",
     "lodash": "^4.17.11",
     "long": "^3.0.3",
