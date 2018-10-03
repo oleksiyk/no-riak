@@ -16,11 +16,12 @@
     "riak"
   ],
   "dependencies": {
+    "bin-protocol": "^3.0.0",
     "bluebird": "^3.3.3",
     "lodash": "^4.5.0",
-    "bin-protocol": "^3.0.0",
-    "wrr-pool": "^1.1.2",
-    "long": "^3.0.3"
+    "long": "^3.0.3",
+    "sinon": "^1.4.0",
+    "wrr-pool": "^1.1.2"
   },
   "devDependencies": {
     "mocha": "^2.4.5",
