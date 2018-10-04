@@ -19,13 +19,13 @@
     "bin-protocol": "^3.1.1",
     "bluebird": "^3.3.3",
     "lodash": "^4.17.11",
-    "long": "^3.0.3",
-    "sinon": "^1.4.0",
+    "long": "^4.0.0",
     "wrr-pool": "^1.1.2"
   },
   "devDependencies": {
     "mocha": "^2.4.5",
     "chai": "^3.5.0",
+    "sinon": "^1.4.0",
     "sinon-chai": "~=2.8.0",
     "chai-as-promised": "^5.2.0",
     "eslint": "^2.2.0",
