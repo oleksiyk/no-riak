@@ -2,7 +2,7 @@ ISTANBUL = ./node_modules/.bin/istanbul
 ESLINT = ./node_modules/.bin/eslint
 MOCHA = ./node_modules/.bin/mocha
 
-RIAK_PROTO_REV = 2.1.2.0
+RIAK_PROTO_REV = 2.3.2
 RIAK_PROTO_BASEURL = https://raw.githubusercontent.com/basho/riak_pb/$(RIAK_PROTO_REV)/src/
 RIAK_PROTO_FILES = riak.proto riak_dt.proto riak_kv.proto riak_pb_messages.csv riak_search.proto riak_ts.proto riak_yokozuna.proto
 
