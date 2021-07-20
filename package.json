@@ -6,7 +6,7 @@
     "name": "Oleksiy Krivoshey",
     "email": "oleksiyk@gmail.com"
   },
-  "version": "1.6.6",
+  "version": "1.6.7",
   "main": "./lib/index.js",
   "keywords": [
     "crdt",
