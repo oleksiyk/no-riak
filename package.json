@@ -7,7 +7,6 @@
     "email": "oleksiyk@gmail.com"
   },
   "version": "1.6.9",
-  "main": "./lib/index.js",
   "keywords": [
     "crdt",
     "node",
